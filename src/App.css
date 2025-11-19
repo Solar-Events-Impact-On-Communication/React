@@ -1,0 +1,933 @@
+/* === App Shell === */
+
+.app {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top, #1b2440, #050711 60%);
+  color: #f5f7ff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding-top: 50px;   /* makes room for the fixed topbar */
+}
+
+/* Top bar with MENU + SOLAR EVENTS */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* center the brand */
+  padding: 18px 28px;
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-size: clamp(1.1rem, 2.4vw, 2.1rem); /* shrink / grow with viewport */
+  white-space: nowrap;
+}
+
+/* so the brand can be a <button> without looking like a default button */
+.brand-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Main content area */
+
+.main {
+  flex: 1;
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px 40px;
+}
+
+/* Full-bleed layout for the timeline (home) */
+
+.main--timeline {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Footer */
+
+.footer {
+  padding: 22px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(195, 205, 240, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 7, 17, 0.95);
+}
+
+/* === MENU BUTTON + SLIDE-OUT NAV === */
+
+.menu-button {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-icon span {
+  width: 26px;
+  height: 3px;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.menu-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Slide-out drawer */
+
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 380px;
+  max-width: 80vw;
+  padding-top: 64px; /* to clear topbar */
+  padding-bottom: 10px;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(6px);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-drawer--open {
+  transform: translateX(0);
+}
+
+.nav-item {
+  width: 100%;
+  padding: 18px 24px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-icon {
+  font-size: 2rem;
+}
+
+/* === TIMELINE (HOME VIEW) === */
+
+.timeline-screen {
+  position: relative;
+  min-height: calc(100vh - 120px);
+  padding: 50px 0 64px 120px;  /* gap from bar -> title & bottom spacing */
+}
+
+.timeline-header {
+  position: sticky;
+  top: 50px;        /* matches padding-top above */
+  z-index: 5;
+  margin-bottom: 48px;   /* space between helper text & first event */
+}
+
+.timeline-header h1 {
+  margin: 0 0 4px 0;
+  font-size: 2.2rem;
+}
+
+.timeline-header p {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(230, 230, 255, 0.9);
+}
+
+.timeline-rail {
+  position: relative;
+  margin-left: 48px;          /* move the rail off the left edge */
+  padding-left: 0;
+  padding-bottom: 32px;
+  border-left: 4px solid rgba(255, 255, 255, 0.9);  /* the vertical line */
+}
+
+/* Clickable timeline rows */
+
+.timeline-row {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 24px 24px 24px 48px;  /* left padding = distance from line to text */
+  margin-bottom: 32px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.timeline-row:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -11px;               /* center of 18px dot lines up with 4px border at x = 0 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-content h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.4rem;
+}
+
+.timeline-year {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.timeline-date {
+  margin-top: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.timeline-title {
+  margin: 8px 0 4px 0;
+  font-size: 1.2rem;
+}
+
+.timeline-description {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+}
+
+.timeline-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.timeline-row:hover .timeline-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Year-grouped timeline styles === */
+
+/* header row container for the year */
+.timeline-year-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* wrap year + count + subtitle */
+.timeline-year-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* top line: year + count side by side */
+.timeline-year-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.timeline-year-count {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(220, 230, 255, 0.9);
+}
+
+/* second line: "Click To View Events" (shows on hover) */
+.timeline-year-subtitle {
+  font-size: 0.9rem;
+  color: rgba(220, 230, 255, 0.9);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* show helper text when hovering the year row */
+.timeline-row--year:hover .timeline-year-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-year-chevron {
+  margin-left: auto;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Container for events within a year */
+.timeline-year-events {
+  margin-top: 10px;
+  padding-left: 4px;
+  border-left: 2px dashed rgba(255, 255, 255, 0.25);
+}
+
+/* Individual event buttons inside a year */
+.timeline-year-event {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  margin: 4px 0;
+  border-radius: 10px;
+  border: none;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  cursor: pointer;
+}
+
+.timeline-year-event:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.timeline-year-event-date {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.timeline-year-event-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.timeline-year-event-description {
+  font-size: 0.9rem;
+  color: rgba(230, 235, 255, 0.9);
+}
+
+/* "CLICK FOR MORE DETAILS" only on hover */
+.timeline-year-event-hint {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.timeline-year-event:hover .timeline-year-event-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Scroll indicators (top & bottom) === */
+
+.scroll-indicator {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.7),
+              0 0 18px rgba(255, 255, 255, 0.15);
+
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.96);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.scroll-indicator--top {
+  top: 90px;
+}
+
+.scroll-indicator--bottom {
+  bottom: 30px;
+}
+
+.scroll-arrow {
+  display: block;
+  font-size: 1.2rem;
+  margin-top: 0;
+  animation: arrow-bounce 1.2s infinite;
+}
+
+.scroll-arrow--up {
+  animation-direction: reverse;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+/* === GENERIC PANELS (OTHER VIEWS) === */
+
+.panel {
+  background: rgba(9, 12, 26, 0.94);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.panel h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.panel h2 {
+  margin-top: 24px;
+  margin-bottom: 6px;
+}
+
+.helper {
+  color: rgba(205, 214, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+/* === Forms / Buttons / Cards (Birthday, Live, Admin) === */
+
+.birthday-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(6, 8, 20, 0.95);
+  color: #f5f7ff;
+}
+
+.input::placeholder {
+  color: rgba(200, 210, 240, 0.8);
+}
+
+.primary {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #ffb84a, #ff7a59);
+  color: #211107;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary:hover {
+  filter: brightness(1.05);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.card {
+  background: rgba(10, 15, 32, 0.95);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* === Admin layout === */
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.admin-login label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.admin-login label span {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: rgba(210, 218, 255, 0.9);
+}
+
+.admin-dashboard {
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(7, 10, 22, 0.95);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+/* === Event detail overlay === */
+
+.event-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;            /* sit higher, less bottom padding */
+  justify-content: center;
+  padding: 72px 24px 32px;           /* more space on top than bottom */
+  background: rgba(0, 0, 0, 0.4);    /* subtle dim; sun/starfield still visible */
+}
+
+.event-detail-card {
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  max-height: 88vh;                  /* never taller than viewport */
+  overflow-y: auto;
+  padding: 32px 40px 32px 40px;
+  padding-right: 150px;              /* space for the side button */
+  background: #ffffff;
+  border-radius: 32px;
+  border: 6px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.7);
+  color: #111111;
+  margin-left: 8vw;                  /* shift card toward the right */
+}
+
+.event-detail-title {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+}
+
+.event-detail-meta {
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  color: #666666;
+}
+
+.event-detail-section {
+  margin-bottom: 24px;
+}
+
+.event-detail-section h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+}
+
+/* scrollable text areas inside the card */
+
+.event-detail-scrollbox {
+  max-height: 220px;        /* tall enough that scrolling is obvious */
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.event-detail-scrollbox p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* optional scrollbar styling */
+
+.event-detail-scrollbox::-webkit-scrollbar {
+  width: 6px;
+}
+
+.event-detail-scrollbox::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 999px;
+}
+
+.event-detail-scrollbox::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+}
+
+/* circular side button like the mock */
+
+.event-detail-side-action {
+  position: absolute;
+  top: 50%;
+  right: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.event-detail-circle-button {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-detail-circle-label {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  max-width: 80px;
+  line-height: 1.2;
+  color: #333333;
+}
+
+/* bottom “Tell Me More” */
+
+.event-detail-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;   /* centered at bottom */
+}
+
+.event-detail-cta {
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: none;
+  background: #111111;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* redesigned close button */
+
+.event-detail-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 2px solid #e53935;
+  background: #ffffff;
+  color: #e53935;             /* red X */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.event-detail-close:hover {
+  background: #e53935;
+  color: #ffffff;             /* invert on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.event-detail-close:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* === Remove default button focus outlines (they caused the long white boxes) === */
+
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: none;
+}
+
+/* === Year search in top-right of the topbar === */
+
+.year-search {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.year-search-input {
+  width: clamp(90px, 8vw, 130px);             /* grows a bit on larger screens */
+  padding: clamp(6px, 0.7vw, 8px) clamp(10px, 1vw, 14px);
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+}
+
+.year-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.year-search-button,
+.year-search-browse {
+  padding: clamp(6px, 0.7vw, 8px) clamp(10px, 1.1vw, 16px);
+  border-radius: 999px;
+  font-size: clamp(0.85rem, 0.95vw, 1rem);
+  cursor: pointer;
+}
+
+/* keep their individual border/background differences */
+.year-search-button {
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  color: #ffffff;
+}
+
+.year-search-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.year-search-browse {
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+}
+
+.year-search-browse:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* popover for decade/year selection */
+
+.year-search-popover {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  min-width: 260px;
+  max-width: 320px;
+  padding: 12px 12px 10px;
+  border-radius: 16px;
+  background: rgba(4, 6, 18, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 30;
+}
+
+.year-search-popover-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.year-search-popover-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(210, 220, 255, 0.8);
+}
+
+.year-search-decade-list,
+.year-search-year-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.year-search-decade,
+.year-search-year {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.year-search-decade:hover,
+.year-search-year:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.year-search-decade.is-active {
+  border-color: rgba(255, 214, 120, 0.95);
+  background: rgba(255, 214, 120, 0.14);
+}
+
+/* message / banners under the Timeline intro */
+
+.timeline-alert {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+.timeline-alert--error {
+  background: rgba(188, 48, 82, 0.25);
+  border-color: rgba(255, 145, 168, 0.9);
+  color: #ffe3ec;
+}
+
+.timeline-alert--info {
+  background: rgba(255, 194, 120, 0.18);
+  border-color: rgba(255, 217, 140, 0.95);
+  color: #ffe9c8;
+}
+
+/* === Global banner for search notifications (under the MENU bar) === */
+
+.global-banner {
+  position: fixed;
+  top: 80px;              /* just below the topbar (which starts at 0) */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 19;            /* below topbar (20), above content */
+  padding: 10px 22px;
+  border-radius: 999px;
+  max-width: 80vw;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-align: center;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.7),
+    0 0 18px rgba(0, 0, 0, 0.6);
+  pointer-events: none;   /* don't block clicks on the timeline */
+  border: 1px solid transparent;
+}
+
+/* info style: "No events for 1999. Showing closest year: 1989." */
+.global-banner--info {
+  background: rgba(255, 194, 120, 0.22);
+  border-color: rgba(255, 217, 140, 0.95);
+  color: #ffe9c8;
+}
+
+/* error style: invalid input, etc. */
+.global-banner--error {
+  background: rgba(188, 48, 82, 0.35);
+  border-color: rgba(255, 145, 168, 0.95);
+  color: #ffe3ec;
+}
+
+
+/* === Responsive tweaks === */
+
+/* Tablet: re-center card so it doesn't get cut off */
+@media (max-width: 1024px) {
+  .event-detail-card {
+    margin-left: 0;
+  }
+
+  .event-overlay-backdrop {
+    align-items: center;
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-screen {
+    padding: 50px 0 80px 72px;  /* a bit tighter on mobile */
+  }
+
+  .timeline-header {
+    top: 50px;
+    margin-bottom: 40px;
+  }
+
+  .timeline-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .nav-item {
+    font-size: 1.3rem;
+  }
+
+  .event-detail-card {
+    padding-right: 130px; /* slightly less side space on small screens */
+  }
+
+  .year-search-popover {
+    right: 8px;
+  }
+}
