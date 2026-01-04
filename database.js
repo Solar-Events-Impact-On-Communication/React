@@ -1,0 +1,136 @@
+// database.js
+import express from 'express';
+import cors from 'cors';
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+dotenv.config();
+
+// ESM-friendly __dirname since "type": "module" is set
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// CA certificate is in the root and named ca-certificate.crt
+const caCertPath = path.join(__dirname, 'ca-certificate.crt');
+console.log('Using CA cert at:', caCertPath);
+const caCert = fs.readFileSync(caCertPath, 'utf8');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Connection pool with proper SSL using the CA
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT) || 25060,
+  user: process.env.DB_USER_PUBLIC,       // solar_public
+  password: process.env.DB_PASSWORD_PUBLIC,
+  database: process.env.DB_NAME,
+  ssl: {
+    ca: caCert,
+    rejectUnauthorized: true, // now safe because we trust the CA
+  },
+  connectionLimit: 10,
+});
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Solar Events API is running' });
+});
+
+// Events route
+app.get('/api/events', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT 
+         id,
+         event_date,
+         event_type,
+         location,
+         title,
+         short_description,
+         summary,
+         impact_on_communication
+       FROM solar_events
+       ORDER BY event_date ASC`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching events from DB:', err);
+    res.status(500).json({ error: 'Failed to fetch events' });
+  }
+});
+
+// Get all media assets linked to a specific event
+app.get('/api/events/:id/media', async (req, res) => {
+  try {
+    const eventId = req.params.id;
+
+    const [rows] = await pool.query(
+      `SELECT 
+         id,
+         event_id,
+         url,
+         caption
+       FROM media_assets
+       WHERE event_id = ?
+       ORDER BY id ASC`,
+      [eventId]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching media assets:', err);
+    res.status(500).json({ error: 'Failed to fetch media assets' });
+  }
+});
+
+//
+// 🔹 NEW: About page content
+//
+app.get('/api/about', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT
+         id,
+         display_order,
+         title,
+         text
+       FROM about_sections
+       ORDER BY display_order ASC, id ASC`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching about_sections:', err);
+    res.status(500).json({ error: 'Failed to fetch about page content' });
+  }
+});
+
+//
+// 🔹 NEW: Team members
+//
+app.get('/api/team', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT
+         id,
+         name,
+         role,
+         image_url
+       FROM team_members
+       ORDER BY id ASC`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching team_members:', err);
+    res.status(500).json({ error: 'Failed to fetch team members' });
+  }
+});
+
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`API server listening on port ${PORT}`);
+});
