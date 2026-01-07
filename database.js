@@ -52,9 +52,28 @@ function getCaCert() {
 }
 
 function buildCorsOptions() {
-  const origin = process.env.CORS_ORIGIN;
-  if (!origin) return undefined; // allow all
-  return { origin, credentials: true };
+  const allowed = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  if (!allowed.length) return undefined;
+
+  return {
+    origin(origin, cb) {
+      if (!origin) return cb(null, true);
+
+      if (allowed.includes(origin)) return cb(null, true);
+
+      const isVercelPreview =
+        /^https:\/\/solar-events(-[a-z0-9-]+)?-okeefevs-projects\.vercel\.app$/i.test(origin);
+
+      if (isVercelPreview) return cb(null, true);
+
+      return cb(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  };
 }
 
 function asyncRoute(handler) {
