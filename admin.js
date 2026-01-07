@@ -42,6 +42,37 @@ const app = express();
    02) Config + Constants
    ========================================================= */
 
+// CORS FIRST (before routes)
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+function isAllowedOrigin(origin) {
+  if (!origin) return true; // curl/server-to-server/no Origin
+  if (allowedOrigins.includes(origin)) return true;
+
+  if (/^https:\/\/.*\.vercel\.app$/.test(origin)) return true;
+
+  return false;
+}
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (isAllowedOrigin(origin)) return cb(null, true);
+      return cb(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+app.options('*', cors());
+
+app.use(express.json({ limit: '2mb' }));
+
 const BCRYPT_ROUNDS = 12;
 
 // ESM-friendly __dirname
