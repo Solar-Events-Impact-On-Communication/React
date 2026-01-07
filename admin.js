@@ -61,7 +61,7 @@ app.use(
   cors({
     origin: (origin, cb) => {
       if (isAllowedOrigin(origin)) return cb(null, true);
-      return cb(new Error(`CORS blocked for origin: ${origin}`));
+      return cb(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -69,7 +69,7 @@ app.use(
   })
 );
 
-app.options('*', cors());
+app.options(/.*/, cors());
 
 app.use(express.json({ limit: '2mb' }));
 
