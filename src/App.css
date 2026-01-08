@@ -3853,358 +3853,219 @@ video {
 }
 
 /* =========================================================
-   TOPBAR — stop year tools dropping under MENU
-   Paste at VERY BOTTOM of App.css
+   TOPBAR — FINAL SINGLE OVERRIDE (paste at VERY BOTTOM)
    ========================================================= */
 
-/* Controls row MUST stay a single row (menu left, year right) */
-.topbar-row--controls {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important; /* key: no wrapping into 3rd row */
-  gap: 12px !important;
-  min-width: 0;
+/* Keep topbar black and make it shorter (no transparency tricks) */
+.topbar {
+  background: rgba(0, 0, 0, 0.92) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  /* shorter bar */
+  padding: 10px 22px !important; /* was 18px 28px */
+  min-height: 62px; /* overall box height control */
+  height: auto !important; /* undo your later height:64px flex hack */
+  display: block !important; /* undo any later display:flex */
 }
 
-/* Menu must participate in layout (not absolute) */
-.topbar-row--controls .menu-button {
+/* App offset should match the shorter bar */
+.app {
+  padding-top: 62px !important; /* was 50px; keeps content below bar */
+}
+
+/* Use your intended topbar-inner grid behavior (wide=1 row, narrow=2 rows) */
+.topbar-inner {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important; /* menu | brand | year tools */
+  grid-template-rows: auto !important;
+  align-items: center !important;
+  column-gap: 16px !important;
+  row-gap: 0 !important;
+}
+
+/* MENU: must not be absolute, and move UP 5px */
+.menu-button {
   position: static !important;
   left: auto !important;
-  flex: 0 0 auto !important;
   margin: 0 !important;
-}
-
-/* Right-side cluster must NOT claim full width */
-.topbar-row--controls .topbar-year-tools {
-  flex: 0 1 auto !important;
-  margin-left: auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  min-width: 0 !important;
-}
-
-/* Year search must be inline, NOT width:100% */
-.topbar-row--controls .year-search {
-  width: auto !important; /* overrides your width:100% rule */
-  max-width: none !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  flex-wrap: nowrap !important; /* keeps input + buttons on one line */
-  gap: 8px !important;
-  padding: 0 !important; /* overrides later padding: 0 10px */
-}
-
-/* Input must NOT be full-width */
-.topbar-row--controls .year-search-input {
-  width: 10ch !important; /* stable year-sized width */
-  max-width: 10ch !important;
-  min-width: 10ch !important;
-  flex: 0 0 auto !important;
-  transform: none !important; /* removes any previous nudges */
-}
-
-/* Buttons stay compact */
-.topbar-row--controls .year-search-button,
-.topbar-row--controls .year-search-browse {
-  flex: 0 0 auto !important;
-  white-space: nowrap !important;
-}
-
-/* Small screens: slightly tighter */
-@media (max-width: 520px) {
-  .topbar-row--controls .year-search-input {
-    width: 9ch !important;
-    max-width: 9ch !important;
-    min-width: 9ch !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .year-search {
-    width: 100%;
-    justify-content: center;
-    margin-top: 8px;
-  }
-}
-
-.year-search-input {
-  width: 100%;
-  max-width: 260px;
-}
-
-.year-search-input--compact {
-  width: 84px; /* or 72px / 96px */
-  padding: 8px 10px;
-}
-
-/* Topbar layout */
-.topbar-inner {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap; /* allow stacking */
-}
-
-/* Brand always first row */
-.topbar-brand {
-  flex: 0 0 auto;
-}
-
-/* Tools row holds MENU + YEAR */
-.topbar-tools-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: auto; /* pushes tools to the right on wide screens */
-  flex: 0 0 auto;
-}
-
-/* Stacked: tools row becomes full width row 2 */
-.topbar--stacked .topbar-tools-row {
-  flex: 1 0 100%;
-  margin-left: 0;
-  justify-content: space-between; /* menu left, year right */
-  margin-top: 10px;
-}
-
-/* Make the YEAR input smaller */
-.year-search-input {
-  width: 90px;
-  max-width: 90px;
-  padding: 8px 10px;
-}
-
-/* =========================================================
-   FINAL TOPBAR POSITION POLISH
-   Paste at VERY BOTTOM of App.css
-   ========================================================= */
-
-/* 1) Ensure brand is ALWAYS above controls */
-.topbar-inner {
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Brand row */
-.topbar-brand {
-  margin-bottom: 6px; /* small gap before controls row */
-}
-
-/* 2) Controls row (menu + year) */
-.topbar-tools-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* 3) Lower the MENU slightly */
-.topbar-menu {
-  transform: translateY(10px); /* <-- your requested drop */
-}
-
-/* 4) Push year tools further right */
-.topbar-tools-row .year-search {
-  margin-left: auto; /* shove to the right edge */
-  padding-right: 12px; /* extra breathing room from edge */
-}
-
-/* Keep year input compact */
-.year-search-input {
-  width: 8.5ch;
-  min-width: 8.5ch;
-  max-width: 8.5ch;
-}
-
-/* Buttons stay vertically aligned */
-.year-search-button,
-.year-search-browse {
-  height: 36px;
-  line-height: 1;
-}
-
-/* 5) Wide screens: center brand, keep tools wide */
-@media (min-width: 900px) {
-  .topbar-inner {
-    align-items: stretch;
-  }
-
-  .topbar-brand {
-    text-align: center;
-  }
-}
-
-/* =========================================================
-   TOPBAR OVERRIDE (uses YOUR real classes)
-   Brand on top. Controls row below.
-   Menu lowered ~10px. Year tools pushed right.
-   ========================================================= */
-
-.topbar-inner {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-}
-
-/* Brand/title row (YOUR class is .brand) */
-.topbar-inner .brand {
-  order: 1 !important;
-  width: 100% !important;
-  text-align: center !important;
-  justify-self: unset !important;
-  margin: 0 0 8px 0 !important; /* space below title */
-}
-
-/* Controls row container (you have both patterns in your file) */
-.topbar-row--controls,
-.topbar-tools-row {
-  order: 2 !important;
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important;
-}
-
-/* If controls aren’t wrapped in a container, still force layout */
-.topbar-inner > .menu-button,
-.topbar-inner > .year-search {
-  order: 2 !important;
-}
-
-/* MENU: make sure it is not absolute, then lower it ~10px */
-.menu-button {
-  position: static !important;
-  left: auto !important;
-  transform: translateY(10px) !important; /* <-- lowers menu */
-}
-
-/* Year/search/browse cluster: push it further right */
-.year-search {
-  margin-left: auto !important;
-  justify-content: flex-end !important;
-  padding-right: 26px !important; /* <-- further to the right */
-}
-
-/* Keep year input from going full width */
-.year-search-input {
-  width: 90px !important;
-  max-width: 90px !important;
-}
-
-/* =========================================================
-   TOPBAR MICRO-ADJUSTMENTS (final polish)
-   ========================================================= */
-
-/* Brand/title: move DOWN 5px */
-.topbar-inner .brand {
-  transform: translateY(20px) !important;
-}
-
-/* Menu button: move UP 5px */
-.menu-button {
   transform: translateY(-5px) !important;
 }
 
-/* Year + Search + Browse: move RIGHT 5px */
+/* BRAND: centered, move DOWN 5px */
+.brand {
+  justify-self: center !important;
+  transform: translateY(5px) !important;
+}
+
+/* YEAR tools cluster: right side, move RIGHT 5px */
+.topbar-year-tools,
 .year-search {
-  transform: translateX(30px) !important;
+  justify-self: end !important;
+  margin-left: 0 !important;
+  transform: translateX(5px) !important;
 }
 
-/* =========================================================
-   TOPBAR HEIGHT REDUCTION (tight but not cramped)
-   ========================================================= */
-
-/* Reduce vertical padding of the bar itself */
-.topbar {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
-
-/* Tighten brand row */
-.topbar-inner .brand {
-  line-height: 1.1 !important;
-  margin-bottom: 4px !important; /* less space before controls row */
-}
-
-/* Controls row tighter vertically */
-.topbar-row--controls,
-.topbar-tools-row {
+/* Keep the input from going full width from older rules */
+.year-search {
+  width: auto !important;
+  max-width: min(520px, 48vw) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
   align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
 }
 
-/* Reduce MENU button height slightly */
-.menu-button {
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-  line-height: 1 !important;
+.year-search-input {
+  width: clamp(88px, 12vw, 140px) !important;
+  max-width: none !important;
 }
 
-/* Normalize pill heights so they don’t inflate the bar */
+/* Make all pills the same height so the bar doesn’t get tall */
 .year-search-input,
 .year-search-button,
 .year-search-browse {
-  height: 34px !important; /* was ~38px */
+  height: 34px !important;
+  line-height: 34px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* =========================
+   NARROW: switch to 2 rows
+   Brand row 1
+   Menu left + Year right row 2
+   ========================= */
+@media (max-width: 760px) {
+  .topbar-inner {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto !important;
+    row-gap: 8px !important;
+  }
+
+  .brand {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+  }
+
+  .menu-button {
+    grid-column: 1 !important;
+    justify-self: start !important;
+  }
+
+  .topbar-year-tools,
+  .year-search {
+    grid-column: 2 !important;
+    justify-self: end !important;
+  }
 }
 
 /* =========================================================
-   TOPBAR: shorten the *background box* WITHOUT moving content
+   TOPBAR — FINAL SINGLE OVERRIDE (paste at VERY BOTTOM)
    ========================================================= */
 
+/* Keep topbar black and make it shorter (no transparency tricks) */
 .topbar {
-  position: fixed;
-  overflow: visible; /* allow content to sit outside bg if needed */
-  background: transparent !important; /* we will draw bg with ::before */
-}
-
-/* The actual “box” behind everything */
-.topbar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 64px; /* ↓ THIS is the box height */
-  background: rgba(0, 0, 0, 0.9);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.92) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(10px);
-  z-index: -1;
+  /* shorter bar */
+  padding: 10px 22px !important; /* was 18px 28px */
+  min-height: 62px; /* overall box height control */
+  height: auto !important; /* undo your later height:64px flex hack */
+  display: block !important; /* undo any later display:flex */
 }
 
-/* If your border was on .topbar, ensure it’s not doubling */
-.topbar {
-  border-bottom: none !important;
+/* App offset should match the shorter bar */
+.app {
+  padding-top: 62px !important; /* was 50px; keeps content below bar */
 }
 
-/* =========================================================
-   TOPBAR: keep it BLACK, but visually shorter (no moving content)
-   ========================================================= */
-
-/* Keep the bar black */
-.topbar {
-  background: rgba(0, 0, 0, 0.9) !important;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 18px !important; /* keep your existing content position */
-  padding-bottom: 18px !important;
-  overflow: hidden; /* this is what "shrinks" the visible box */
-}
-
-/* Reduce visible height by clipping the bar background area.
-   We do it by limiting the bar’s own height but keeping your inner layout from shifting. */
-.topbar {
-  height: 64px; /* <-- shrink the bar box */
-  display: flex;
-  align-items: center; /* keeps content centered in the shorter bar */
-}
-
-/* If your layout is column-based (brand above controls), keep it */
+/* Use your intended topbar-inner grid behavior (wide=1 row, narrow=2 rows) */
 .topbar-inner {
-  width: 100%;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important; /* menu | brand | year tools */
+  grid-template-rows: auto !important;
+  align-items: center !important;
+  column-gap: 16px !important;
+  row-gap: 0 !important;
+}
+
+/* MENU: must not be absolute, and move UP 5px */
+.menu-button {
+  position: static !important;
+  left: auto !important;
+  margin: 0 !important;
+  transform: translateY(-5px) !important;
+}
+
+/* BRAND: centered, move DOWN 5px */
+.brand {
+  justify-self: center !important;
+  transform: translateY(5px) !important;
+}
+
+/* YEAR tools cluster: right side, move RIGHT 5px */
+.topbar-year-tools,
+.year-search {
+  justify-self: end !important;
+  margin-left: 0 !important;
+  transform: translateX(5px) !important;
+}
+
+/* Keep the input from going full width from older rules */
+.year-search {
+  width: auto !important;
+  max-width: min(520px, 48vw) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+}
+
+.year-search-input {
+  width: clamp(88px, 12vw, 140px) !important;
+  max-width: none !important;
+}
+
+/* Make all pills the same height so the bar doesn’t get tall */
+.year-search-input,
+.year-search-button,
+.year-search-browse {
+  height: 34px !important;
+  line-height: 34px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* =========================
+   NARROW: switch to 2 rows
+   Brand row 1
+   Menu left + Year right row 2
+   ========================= */
+@media (max-width: 760px) {
+  .topbar-inner {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto !important;
+    row-gap: 8px !important;
+  }
+
+  .brand {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+  }
+
+  .menu-button {
+    grid-column: 1 !important;
+    justify-self: start !important;
+  }
+
+  .topbar-year-tools,
+  .year-search {
+    grid-column: 2 !important;
+    justify-self: end !important;
+  }
 }
