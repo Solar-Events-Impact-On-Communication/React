@@ -4152,3 +4152,32 @@ video {
   padding-bottom: 0 !important;
   line-height: 1 !important;
 }
+
+/* =========================================================
+   TOPBAR: shorten the *background box* WITHOUT moving content
+   ========================================================= */
+
+.topbar {
+  position: fixed;
+  overflow: visible; /* allow content to sit outside bg if needed */
+  background: transparent !important; /* we will draw bg with ::before */
+}
+
+/* The actual “box” behind everything */
+.topbar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 64px; /* ↓ THIS is the box height */
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+/* If your border was on .topbar, ensure it’s not doubling */
+.topbar {
+  border-bottom: none !important;
+}
