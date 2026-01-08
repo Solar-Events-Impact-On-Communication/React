@@ -4095,3 +4095,164 @@ video {
     max-width: 100%;
   }
 }
+
+/* =========================================================
+   Mobile/slim window fixes (layout + button responsiveness)
+   Added: 2026-01-07
+   ========================================================= */
+
+/* 1) Prevent menu button overlapping the year search on narrow widths */
+@media (max-width: 520px) {
+  .topbar {
+    /* three rows: menu+spacer, brand, search */
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto;
+    row-gap: 10px;
+    padding: 12px 12px;
+  }
+
+  .menu-button {
+    position: static; /* was absolute; absolute caused overlap */
+    left: auto;
+    grid-column: 1;
+    grid-row: 1;
+    padding: 4px 6px;
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .year-search {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .year-search-input {
+    flex: 1 1 160px;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .year-search-button,
+  .year-search-browse {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+/* 2) Nav drawer: ensure the top isn't hidden behind the fixed topbar */
+.nav-drawer {
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 25; /* above the topbar (z-index: 20) */
+  padding-top: calc(64px + env(safe-area-inset-top));
+}
+
+@media (max-width: 520px) {
+  .nav-drawer {
+    /* topbar is taller on mobile because it becomes 3 rows */
+    padding-top: calc(118px + env(safe-area-inset-top));
+  }
+
+  .nav-item {
+    padding: 16px 18px;
+    font-size: 1.25rem;
+  }
+}
+
+/* 3) Timeline: shift rail + content left, and let event cards reach the window edge */
+@media (max-width: 520px) {
+  .timeline-screen {
+    /* less left + right padding so content isn't squeezed/offset */
+    padding: 44px 14px 72px 44px;
+  }
+
+  .timeline-rail {
+    margin-left: 22px;
+    padding-right: 14px;
+    border-left-width: 3px;
+  }
+
+  .timeline-row {
+    padding: 18px 0 18px 34px;
+    margin-bottom: 22px;
+  }
+
+  .timeline-dot {
+    left: -10px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .timeline-year-events {
+    margin-top: 8px;
+    padding-left: 10px;
+  }
+
+  .timeline-year-event {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0;
+  }
+}
+
+/* 4) Admin Team: make photo/remove/actions responsive and readable on slim windows */
+@media (max-width: 640px) {
+  .admin-team-add-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-new-member-photo-chip {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .admin-team-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .admin-team-photo-cell {
+    justify-content: flex-start;
+  }
+
+  .admin-team-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* Make the file-upload (Change Photo) span full width */
+  .admin-team-photo-upload {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  /* Make Remove + Edit/Delete buttons full-width within their grid cells */
+  .admin-team-remove-button,
+  .admin-team-actions button {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .admin-team-remove-button {
+    padding: 6px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
