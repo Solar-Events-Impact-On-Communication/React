@@ -4036,3 +4036,61 @@ video {
     text-align: center;
   }
 }
+
+/* =========================================================
+   TOPBAR OVERRIDE (uses YOUR real classes)
+   Brand on top. Controls row below.
+   Menu lowered ~10px. Year tools pushed right.
+   ========================================================= */
+
+.topbar-inner {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+/* Brand/title row (YOUR class is .brand) */
+.topbar-inner .brand {
+  order: 1 !important;
+  width: 100% !important;
+  text-align: center !important;
+  justify-self: unset !important;
+  margin: 0 0 8px 0 !important; /* space below title */
+}
+
+/* Controls row container (you have both patterns in your file) */
+.topbar-row--controls,
+.topbar-tools-row {
+  order: 2 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+}
+
+/* If controls aren’t wrapped in a container, still force layout */
+.topbar-inner > .menu-button,
+.topbar-inner > .year-search {
+  order: 2 !important;
+}
+
+/* MENU: make sure it is not absolute, then lower it ~10px */
+.menu-button {
+  position: static !important;
+  left: auto !important;
+  transform: translateY(10px) !important; /* <-- lowers menu */
+}
+
+/* Year/search/browse cluster: push it further right */
+.year-search {
+  margin-left: auto !important;
+  justify-content: flex-end !important;
+  padding-right: 26px !important; /* <-- further to the right */
+}
+
+/* Keep year input from going full width */
+.year-search-input {
+  width: 90px !important;
+  max-width: 90px !important;
+}
