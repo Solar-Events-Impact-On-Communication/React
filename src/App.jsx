@@ -1014,16 +1014,10 @@ function LiveView() {
 
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024; // 2 MB
 
-function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
+function AvatarCropModal({ isOpen, imageSrc, onClose, onSave, onLoaded }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-
-  const [cropLoading, setCropLoading] = useState(true);
-
-  useEffect(() => {
-    if (isOpen && imageSrc) setCropLoading(true);
-  }, [isOpen, imageSrc]);
 
   const onCropComplete = useCallback((_area, areaPixels) => {
     setCroppedAreaPixels(areaPixels);
@@ -1077,8 +1071,6 @@ function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
         <h3>Adjust Profile Photo</h3>
 
         <div className="avatar-crop-container">
-          {cropLoading && <div className="avatar-crop-loading">Loading photo editor…</div>}
-
           <Cropper
             image={imageSrc}
             crop={crop}
@@ -1089,7 +1081,9 @@ function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
-            onMediaLoaded={() => setCropLoading(false)}
+            onMediaLoaded={() => {
+              if (onLoaded) onLoaded();
+            }}
           />
         </div>
 
@@ -1220,6 +1214,8 @@ function AdminView() {
 
   const [mediaUploadBusy, setMediaUploadBusy] = useState(false);
   const [mediaUploadError, setMediaUploadError] = useState('');
+
+  const [cropperBlocking, setCropperBlocking] = useState(false);
 
   const [createMediaUploading, setCreateMediaUploading] = useState(false);
   const [createMediaUploadingText, setCreateMediaUploadingText] = useState('');
@@ -1499,6 +1495,7 @@ function AdminView() {
     reader.onload = () => {
       setAvatarImageSrc(reader.result.toString());
       setAvatarTargetId(memberId);
+      setCropperBlocking(true);
       setAvatarModalOpen(true);
       setTeamPhotoError('');
     };
@@ -1507,6 +1504,7 @@ function AdminView() {
 
   const closeAvatarModal = () => {
     setAvatarModalOpen(false);
+    setCropperBlocking(false);
     setAvatarTargetId(null);
     setAvatarImageSrc('');
   };
@@ -3954,6 +3952,7 @@ function AdminView() {
                 imageSrc={avatarImageSrc}
                 onClose={closeAvatarModal}
                 onSave={handleAvatarSave}
+                onLoaded={() => setCropperBlocking(false)}
               />
             </div>
           )}
@@ -4336,6 +4335,7 @@ function AdminView() {
         createMediaUploading ||
         accountSaving ||
         profileSaving ||
+        cropperBlocking ||
         aboutSaving ||
         accountDeleting ||
         teamBlocking ||
@@ -4362,11 +4362,13 @@ function AdminView() {
                             ? 'Deleting Account'
                             : accountSaving
                               ? 'Saving account changes…'
-                              : profileSaving
-                                ? 'Updating your profile…'
-                                : aboutSaving
-                                  ? 'Saving About page…'
-                                  : 'Working…'}
+                              : cropperBlocking
+                                ? 'Loading photo editor...'
+                                : profileSaving
+                                  ? 'Updating your profile…'
+                                  : aboutSaving
+                                    ? 'Saving About page…'
+                                    : 'Working…'}
             </div>
           </div>
         </div>

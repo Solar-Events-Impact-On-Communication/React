@@ -69,9 +69,9 @@
   left: 0;
   right: 0;
   z-index: 20;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: center;
   padding: 18px 28px;
   background: rgba(0, 0, 0, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -83,6 +83,7 @@
   letter-spacing: 0.2em;
   font-size: clamp(1.1rem, 2.4vw, 2.1rem);
   white-space: nowrap;
+  justify-self: center;
 }
 
 .brand-button {
@@ -807,7 +808,7 @@
 
 .admin-year-search {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -818,6 +819,15 @@
   gap: 4px;
   font-size: 1rem;
   color: rgba(245, 247, 255, 0.9);
+}
+
+.admin-year-label input.year-search-input {
+  width: 160px;
+}
+@media (max-width: 520px) {
+  .admin-year-label input.year-search-input {
+    width: min(220px, 80vw);
+  }
 }
 
 .admin-year-search .year-search-button,
@@ -1431,13 +1441,14 @@ button:focus-visible {
    ========================================================= */
 
 .year-search {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
+  transform: none;
+
+  justify-self: end;
   display: flex;
   align-items: center;
   gap: 6px;
+  max-width: min(520px, 48vw);
 }
 
 .year-search-input {
@@ -1884,6 +1895,31 @@ button:focus-visible {
   }
 }
 
+@media (max-width: 780px) {
+  .topbar {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+    padding: 14px 14px;
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .year-search {
+    grid-column: 1 / -1;
+    justify-self: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .year-search-input {
+    width: min(180px, 40vw);
+  }
+}
+
 /* =========================================================
    ADMIN BUTTON + TAB OVERRIDES
    ========================================================= */
@@ -2259,7 +2295,7 @@ button:focus-visible {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  min-width: 0;
 }
 
 .admin-team-actions > * {
@@ -2278,6 +2314,9 @@ button:focus-visible {
   font-size: 0.8rem;
   cursor: pointer;
   white-space: nowrap;
+  flex: 1 1 200px;
+  min-width: 160px;
+  max-width: 100%;
 }
 
 .admin-team-photo-upload input[type='file'] {
@@ -2293,7 +2332,7 @@ button:focus-visible {
 
 .admin-team-photo-upload span {
   display: inline-block;
-  max-width: 220px; /* prevents huge text on narrow screens */
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2351,6 +2390,35 @@ button:focus-visible {
   flex: 0 0 auto;
   padding: 6px 12px;
   border-radius: 999px;
+}
+
+.admin-fullpage-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-fullpage-blocker-card {
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: rgba(20, 30, 60, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  max-width: 320px;
+  text-align: center;
+}
+
+.admin-fullpage-blocker-title {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.admin-fullpage-blocker-subtitle {
+  opacity: 0.85;
+  font-size: 0.95rem;
 }
 
 /* =========================================================
@@ -2485,6 +2553,11 @@ button:focus-visible {
     background 0.18s ease,
     color 0.18s ease,
     border-color 0.18s ease;
+  flex: 0 1 auto;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .admin-team-remove-button:hover {
@@ -3928,4 +4001,97 @@ button:focus-visible {
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   padding: 10px 12px;
+}
+
+/* =========================================================
+   Additional Fixes
+   ========================================================= */
+
+@media (max-width: 780px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+    padding: 14px 14px;
+  }
+
+  .brand {
+    justify-self: center;
+  }
+
+  .year-search {
+    justify-self: center;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .year-search-input {
+    width: min(220px, 80vw);
+  }
+}
+
+@media (max-width: 900px) {
+  .timeline-event-card,
+  .timeline-card,
+  .event-card,
+  .event-details {
+    width: calc(100vw - 60px);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .timeline-event-card,
+  .timeline-card,
+  .event-card,
+  .event-details {
+    width: calc(100vw - 28px);
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .timeline,
+  .timeline-container,
+  .timeline-wrap {
+    padding-left: 14px; /* shifts content left */
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .timeline-line {
+    left: 14px;
+  }
+}
+
+/* Mobile Friendly */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+.admin-modal,
+.modal,
+.dialog {
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+}
+
+@media (max-width: 520px) {
+  .admin-page,
+  .public-page,
+  .content {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
 }
