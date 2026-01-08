@@ -3499,3 +3499,91 @@ video {
     padding: 6px 10px;
   }
 }
+
+/* =========================================================
+   TOPBAR — fix thin-window overlap + right-justify year tools
+   (paste at very bottom of App.css)
+   ========================================================= */
+
+/* Make the controls row truly layout-aware */
+.topbar-row--controls {
+  display: flex;
+  align-items: center; /* vertical centering (menu + year row) */
+  justify-content: space-between; /* menu left, year tools right */
+  gap: 12px;
+  min-width: 0;
+}
+
+/* IMPORTANT: stop absolute positioning so it takes up space */
+.topbar-row--controls .menu-button {
+  position: static; /* overrides your earlier position:absolute */
+  left: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 4px 8px;
+  align-items: center;
+}
+
+/* Ensure the year tools sit to the RIGHT and can shrink */
+.topbar-year-tools {
+  margin-left: auto;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end; /* further right-justified */
+  align-items: center;
+}
+
+/* Keep year search + buttons inline and centered */
+.year-search {
+  display: flex;
+  align-items: center; /* vertical centering */
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Let the input shrink instead of pushing into the menu */
+.year-search-input {
+  width: auto; /* override any "width: 100%" rules below */
+  flex: 0 1 240px; /* prefers 240px, can shrink */
+  min-width: 110px; /* don’t collapse to nothing */
+  max-width: 40vw; /* key for thin desktop windows */
+}
+
+/* Keep buttons compact and non-wrapping */
+.year-search-button,
+.year-search-browse {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Thin desktop window tuning */
+@media (max-width: 520px) {
+  .year-search {
+    gap: 6px;
+  }
+  .year-search-input {
+    flex-basis: 170px;
+    max-width: 34vw;
+  }
+  .year-search-button,
+  .year-search-browse {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Super thin window tuning */
+@media (max-width: 420px) {
+  .year-search-input {
+    flex-basis: 135px;
+    max-width: 30vw;
+    min-width: 90px;
+  }
+  .year-search-button,
+  .year-search-browse {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+}
