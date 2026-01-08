@@ -1810,6 +1810,21 @@ button:focus-visible {
 }
 
 @media (max-width: 768px) {
+  .topbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .year-search {
+    position: static;
+    transform: none;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
   .timeline-screen {
     padding: 50px 0 80px 72px;
   }
@@ -2248,7 +2263,7 @@ button:focus-visible {
 }
 
 .admin-team-actions > * {
-  white-space: nowrap;
+  min-width: 0;
   flex: 0 1 auto;
 }
 
@@ -2270,6 +2285,18 @@ button:focus-visible {
   inset: 0;
   opacity: 0;
   cursor: pointer;
+}
+
+.admin-team-photo-upload {
+  max-width: 100%;
+}
+
+.admin-team-photo-upload span {
+  display: inline-block;
+  max-width: 220px; /* prevents huge text on narrow screens */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =========================================================
@@ -2361,6 +2388,18 @@ button:focus-visible {
   overflow: hidden;
   border-radius: 16px;
   background: #000000;
+}
+
+.avatar-crop-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 5;
+  pointer-events: none;
 }
 
 .avatar-modal-controls {
@@ -3737,6 +3776,15 @@ button:focus-visible {
   display: inline-flex;
   gap: 10px;
   align-items: center;
+}
+
+.year-search {
+  padding: 0 10px;
+}
+
+.year-search-input {
+  width: 100%;
+  max-width: 260px;
 }
 
 .admin-modal-title {

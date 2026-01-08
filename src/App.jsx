@@ -164,6 +164,10 @@ function App() {
   const isAbout = view === 'about';
   const isAdmin = view === 'admin';
 
+  useEffect(() => {
+    document.title = isAdmin ? 'Solar Impacts Admin' : 'Solar Impacts';
+  }, [isAdmin]);
+
   // media overlay state
   const [showMediaOverlay, setShowMediaOverlay] = useState(false);
   const [mediaItems, setMediaItems] = useState([]);
@@ -1015,6 +1019,12 @@ function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
+  const [cropLoading, setCropLoading] = useState(true);
+
+  useEffect(() => {
+    if (isOpen && imageSrc) setCropLoading(true);
+  }, [isOpen, imageSrc]);
+
   const onCropComplete = useCallback((_area, areaPixels) => {
     setCroppedAreaPixels(areaPixels);
   }, []);
@@ -1067,6 +1077,8 @@ function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
         <h3>Adjust Profile Photo</h3>
 
         <div className="avatar-crop-container">
+          {cropLoading && <div className="avatar-crop-loading">Loading photo editor…</div>}
+
           <Cropper
             image={imageSrc}
             crop={crop}
@@ -1077,6 +1089,7 @@ function AvatarCropModal({ isOpen, imageSrc, onClose, onSave }) {
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
+            onMediaLoaded={() => setCropLoading(false)}
           />
         </div>
 
