@@ -4206,3 +4206,189 @@ video {
     width: 100%;
   }
 }
+
+/* =========================================================
+   HOTFIX OVERRIDES (append at very bottom of App.css)
+   - fixes: topbar mobile layout, admin year search alignment,
+            admin team button sizing/overflow, wide panels shrinking
+   ========================================================= */
+
+/* -------------------------
+   1) TOPBAR (mobile): MENU + brand stacked left, search right
+   ------------------------- */
+@media (max-width: 780px) {
+  .topbar {
+    /* Force the layout you want (overrides earlier conflicting @media blocks) */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 8px;
+    align-items: start;
+    padding: 12px 14px;
+  }
+
+  .menu-button {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .brand {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    text-align: left;
+    white-space: nowrap;
+    /* keep the “SOLAR EVENTS” look */
+    letter-spacing: 0.18em;
+  }
+
+  .year-search {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+
+    width: auto;
+    max-width: none;
+    padding: 0;
+
+    /* keep it one-line on the right like your screenshot */
+    flex-wrap: nowrap;
+  }
+
+  /* keep the right-side buttons from wrapping/cutting off */
+  .year-search-button,
+  .year-search-browse {
+    white-space: nowrap;
+  }
+}
+
+/* -------------------------
+   2) ADMIN EVENTS: Filter by Year (stop buttons drifting right / offscreen)
+   ------------------------- */
+.admin-locate-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.admin-year-search {
+  /* ensure the group stays together */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.admin-year-label {
+  /* keep label+input as a block that doesn't steal the whole row */
+  flex: 0 0 auto;
+}
+
+.admin-year-label input.year-search-input {
+  width: 180px;
+  max-width: 100%;
+}
+
+/* Make the two buttons behave like siblings next to the input */
+.admin-year-search .year-search-button,
+.admin-year-search .year-search-browse-button {
+  flex: 0 0 auto;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+/* On narrow screens: let the buttons wrap under the input instead of cutting off */
+@media (max-width: 520px) {
+  .admin-year-label {
+    flex: 1 1 100%;
+  }
+
+  .admin-year-label input.year-search-input {
+    width: 100%;
+  }
+
+  .admin-year-search .year-search-button,
+  .admin-year-search .year-search-browse-button {
+    flex: 1 1 calc(50% - 6px);
+  }
+}
+
+/* -------------------------
+   3) ADMIN TEAM: "Add New Member" row + action buttons stop overlapping
+   ------------------------- */
+
+/* Add New Member grid: collapse nicely on mobile */
+@media (max-width: 780px) {
+  .admin-team-add-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  /* Make everything full width inside the Add New Member box */
+  .admin-team-add-row > * {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Team list rows: stop Change Photo / Remove / Edit / Delete overflowing */
+@media (max-width: 780px) {
+  .admin-team-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .admin-team-photo-cell {
+    justify-content: flex-start;
+  }
+
+  .admin-team-actions {
+    width: 100%;
+  }
+
+  .admin-team-photo-upload {
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .admin-team-remove-button {
+    width: 100%;
+  }
+}
+
+/* -------------------------
+   4) “Dark blue tiles” / wide panels: prevent horizontal overflow
+   ------------------------- */
+.panel,
+.panel.panel--wide,
+.admin-view > .panel,
+.admin-view > .panel.admin-panel {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  .panel.panel--wide {
+    width: calc(100% - 28px);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 22px 16px;
+  }
+}
+
+/* Event detail overlay: reduce the huge right padding on small screens */
+@media (max-width: 520px) {
+  .event-detail-card {
+    padding: 18px 56px 18px 18px; /* was 24px 96px ... causing squeeze/overflow */
+    border-width: 4px;
+    border-radius: 20px;
+  }
+}
