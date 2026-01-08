@@ -455,6 +455,14 @@ function App() {
       <header className="topbar">
         <div className="topbar-inner">
           <button
+            className="brand brand-button"
+            onClick={() => handleNavClick('home')}
+            type="button"
+          >
+            SOLAR EVENTS
+          </button>
+
+          <button
             ref={menuButtonRef}
             className={`menu-button ${menuOpen ? 'is-open' : ''}`}
             onClick={() => {
@@ -470,14 +478,6 @@ function App() {
               <span />
             </span>
             <span className="menu-text">MENU</span>
-          </button>
-
-          <button
-            className="brand brand-button"
-            onClick={() => handleNavClick('home')}
-            type="button"
-          >
-            SOLAR EVENTS
           </button>
 
           {view === 'home' && (
