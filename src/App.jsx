@@ -802,8 +802,6 @@ function TimelineYearRow({ year, events, isExpanded, onToggle, onOpenEvent }) {
             {isExpanded ? 'Click To Close' : 'Click To View Event'}
           </div>
         </div>
-
-        <span className="timeline-year-chevron">{isExpanded ? '▲' : '▼'}</span>
       </button>
 
       {isExpanded && (

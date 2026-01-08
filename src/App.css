@@ -372,11 +372,12 @@
   box-sizing: border-box;
 }
 .timeline-header {
-  position: sticky;
-  top: calc(var(--topbar-h) + 10px);
-  z-index: 5;
-  margin-bottom: 48px;
+  position: relative;
+  top: auto;
+  z-index: 1;
+  margin-bottom: 88px;
 }
+
 .timeline-header h1 {
   margin: 0 0 4px 0;
   font-size: 3rem;
@@ -953,4 +954,32 @@ img,
 video {
   max-width: 100%;
   height: auto;
+}
+
+/* --- TOPBAR hard-force (wins against old/duplicate rules) --- */
+.topbar {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: auto auto !important;
+  row-gap: 10px !important;
+  column-gap: 12px !important;
+}
+
+.topbar .brand {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  justify-self: center !important;
+}
+
+.topbar .menu-button {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  justify-self: start !important;
+  position: static !important; /* defeats any old absolute positioning */
+}
+
+.topbar .year-search {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  justify-self: end !important;
 }
