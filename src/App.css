@@ -1,7 +1,8 @@
 /* =========================================================
    Solar Events — App.css (FULL REPLACEMENT)
-   - Clean rebuilt TOPBAR (no duplicate topbar overrides)
-   - Preserves existing class names used across public + admin UI
+   - TOPBAR rebuilt (NO duplicates; always 2-row layout like your mock)
+   - Brand centered on row 1
+   - Row 2: MENU left, YEAR/SEARCH/BROWSE right
    - Includes requested :root + .app padding-top using topbar height
    ========================================================= */
 
@@ -10,8 +11,9 @@
    ========================================================= */
 
 :root {
-  --topbar-h: 74px;
-  --topbar-h-stacked: 112px;
+  /* Topbar is always 2 rows in the new design */
+  --topbar-h: 112px;
+  --topbar-h-stacked: 112px; /* kept for compatibility */
 }
 
 .app {
@@ -31,9 +33,8 @@
   padding-top: var(--topbar-h);
 }
 
-/* --- TOPBAR (ground-up) ---
-   Wide: one row  [MENU | TITLE | YEAR SEARCH]
-   Narrow: two rows
+/* --- TOPBAR (ground-up / single source of truth) ---
+   Always 2 rows:
      Row 1: TITLE (center)
      Row 2: MENU (left) + YEAR SEARCH (right)
 */
@@ -43,34 +44,60 @@
   left: 0;
   right: 0;
   z-index: 20;
-  padding: 12px 18px;
+
+  padding: 10px 18px 12px;
   background: rgba(0, 0, 0, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
 
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr; /* row 2 split */
+  grid-template-rows: auto auto; /* title, then controls */
   align-items: center;
+  row-gap: 10px;
   column-gap: 12px;
 }
 
-/* MENU (left) */
+/* TITLE (row 1, centered) */
+.topbar .brand {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: center;
+  align-self: center;
+
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-size: clamp(1.25rem, 2.2vw, 2.1rem);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.brand-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* MENU (row 2, left) */
 .topbar .menu-button {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 2;
   justify-self: start;
   align-self: center;
 
-  position: static; /* critical: keep in grid */
+  /* critical: keep in grid (avoid older absolute positioning rules) */
+  position: static;
   left: auto;
+
   display: inline-flex;
   align-items: center;
   gap: 10px;
 
   background: transparent;
   border: none;
-  padding: 4px 8px;
+  padding: 6px 8px;
   cursor: pointer;
   color: #fff;
 }
@@ -91,31 +118,10 @@
   font-weight: 700;
 }
 
-/* TITLE (center) */
-.topbar .brand {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: center;
-  align-self: center;
-
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  font-size: clamp(1.1rem, 2.4vw, 2.1rem);
-  white-space: nowrap;
-  text-align: center;
-}
-.brand-button {
-  background: transparent;
-  border: none;
-  color: inherit;
-  padding: 0;
-  cursor: pointer;
-}
-
-/* YEAR SEARCH (right) */
+/* YEAR SEARCH (row 2, right) */
 .topbar .year-search {
-  grid-column: 3;
-  grid-row: 1;
+  grid-column: 2;
+  grid-row: 2;
   justify-self: end;
   align-self: center;
 
@@ -130,6 +136,7 @@
   margin: 0;
 
   position: relative; /* anchors popover */
+  flex-wrap: nowrap; /* keep Search/Browse on same line */
 }
 
 .topbar .year-search-input {
@@ -227,40 +234,26 @@
   background: rgba(255, 214, 120, 0.14);
 }
 
-/* Narrow layout: stack */
-@media (max-width: 780px) {
+/* Tighten controls on very small screens (still 2 rows) */
+@media (max-width: 420px) {
   :root {
-    --topbar-h: var(--topbar-h-stacked);
+    --topbar-h: 124px; /* extra room if buttons wrap */
   }
 
   .topbar {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    row-gap: 10px;
-  }
-
-  .topbar .brand {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    justify-self: center;
-  }
-
-  .topbar .menu-button {
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: start;
-  }
-
-  .topbar .year-search {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: end;
-    flex-wrap: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .topbar .year-search-input {
-    width: 9ch;
-    max-width: 9ch;
+    width: 8ch;
+    max-width: 8ch;
+    padding: 8px 12px;
+  }
+
+  .year-search-button,
+  .year-search-browse {
+    padding: 8px 12px;
   }
 }
 
