@@ -3976,3 +3976,63 @@ video {
   max-width: 90px;
   padding: 8px 10px;
 }
+
+/* =========================================================
+   FINAL TOPBAR POSITION POLISH
+   Paste at VERY BOTTOM of App.css
+   ========================================================= */
+
+/* 1) Ensure brand is ALWAYS above controls */
+.topbar-inner {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Brand row */
+.topbar-brand {
+  margin-bottom: 6px; /* small gap before controls row */
+}
+
+/* 2) Controls row (menu + year) */
+.topbar-tools-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 3) Lower the MENU slightly */
+.topbar-menu {
+  transform: translateY(10px); /* <-- your requested drop */
+}
+
+/* 4) Push year tools further right */
+.topbar-tools-row .year-search {
+  margin-left: auto; /* shove to the right edge */
+  padding-right: 12px; /* extra breathing room from edge */
+}
+
+/* Keep year input compact */
+.year-search-input {
+  width: 8.5ch;
+  min-width: 8.5ch;
+  max-width: 8.5ch;
+}
+
+/* Buttons stay vertically aligned */
+.year-search-button,
+.year-search-browse {
+  height: 36px;
+  line-height: 1;
+}
+
+/* 5) Wide screens: center brand, keep tools wide */
+@media (min-width: 900px) {
+  .topbar-inner {
+    align-items: stretch;
+  }
+
+  .topbar-brand {
+    text-align: center;
+  }
+}
