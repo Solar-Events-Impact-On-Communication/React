@@ -3529,3 +3529,43 @@ video {
 .topbar {
   padding-right: 18px !important; /* adjust if you want more/less edge spacing */
 }
+
+/* =========================================================
+   TOPBAR — FORCE RIGHT-JUSTIFY (no manual px shifting)
+   Paste at VERY BOTTOM of App.css
+   ========================================================= */
+
+/* 1) Make sure the topbar’s inner wrapper can actually span full width */
+.topbar-inner {
+  width: 100% !important;
+  max-width: none !important; /* critical if something capped it */
+  margin: 0 !important; /* critical if something centered it */
+}
+
+/* 2) Your controls row must be a full-width flex row */
+.topbar-row--controls,
+.topbar-tools-row {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important; /* MENU hard-left, tools hard-right */
+  flex-wrap: nowrap !important;
+}
+
+/* 3) Make the right cluster “hug” the right edge automatically */
+.topbar-year-tools,
+.year-search {
+  margin-left: auto !important; /* takes all remaining space */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important; /* shove contents to the far right */
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* 4) Kill transforms/padding hacks that fight layout */
+.topbar-year-tools,
+.year-search {
+  transform: none !important;
+  padding-right: 0 !important;
+}
