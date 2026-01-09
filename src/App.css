@@ -3474,7 +3474,7 @@ video {
   @media (max-width: 900px) {
     .timeline-screen {
       padding-top: 8px !important; /* less space above title */
-      padding-left: 42px !important; /* shifted left */
+      padding-left: 10px !important; /* shifted left */
     }
 
     .timeline-header {
