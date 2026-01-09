@@ -3337,3 +3337,105 @@ video {
     max-width: 100%;
   }
 }
+
+/* =========================================================
+   TOPBAR — FINAL (wide = 1 row, stacked = 2 rows)
+   Keep ONLY this topbar block at the bottom of App.css
+   ========================================================= */
+
+/* Base topbar shell */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+
+  padding: 12px 18px;
+}
+
+/* Inner layout:
+   - tools row spans full width (menu left, year tools right)
+   - brand is centered via absolute positioning (wide mode only)
+*/
+.topbar-inner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Tools row (MENU left, YEAR tools right) */
+.topbar-tools-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* IMPORTANT: MENU must participate in layout (NOT absolute) */
+.menu-button {
+  position: static !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+/* Right side (year/search/browse) hugs the right edge */
+.year-search {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap; /* keep input + buttons on one line */
+}
+
+/* BRAND: perfectly centered in wide mode */
+.topbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  justify-self: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   STACKED MODE (2 rows):
+   row 1: brand centered
+   row 2: menu left, year tools right
+   --------------------------------------------------------- */
+
+.topbar--stacked .topbar-inner {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* Brand becomes normal-flow in stacked mode */
+.topbar--stacked .topbar-brand {
+  position: static;
+  left: auto;
+  transform: none;
+  align-self: center;
+  text-align: center;
+}
+
+/* Controls row stays full-width */
+.topbar--stacked .topbar-tools-row {
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* In stacked mode, don’t “auto-push” with margin-left:auto;
+   space-between already handles it cleanly. */
+.topbar--stacked .year-search {
+  margin-left: 0;
+}
