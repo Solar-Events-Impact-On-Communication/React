@@ -3569,3 +3569,43 @@ video {
   transform: none !important;
   padding-right: 0 !important;
 }
+/* --- Topbar alignment fixes (no manual spacing) --- */
+
+/* Brand on left, tools row pushed to the far right */
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* match your gap */
+}
+
+.topbar-tools-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto; /* <-- this is the “push to the right” */
+}
+
+/* Keep year tools to the right of menu (and prevent weird shrinking) */
+.topbar-menu {
+  flex: 0 0 auto;
+}
+
+.year-search {
+  flex: 0 0 auto;
+  margin-left: auto; /* <-- ensures year tools hug the right edge */
+}
+
+/* --- Stacked layout: 2nd row becomes full width, menu left / year tools right --- */
+.topbar--stacked .topbar-inner {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.topbar--stacked .topbar-tools-row {
+  width: 100%;
+  justify-content: space-between; /* menu left, year tools right */
+}
+
+.topbar--stacked .year-search {
+  margin-left: 0; /* space-between handles alignment */
+}
