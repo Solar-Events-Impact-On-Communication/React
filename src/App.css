@@ -3471,21 +3471,16 @@ video {
     padding-right: 8px !important; /* slight breathing room */
   }
 
-  /* Timeline: fix overlap + reduce top gap + shift left */
-  .timeline-screen {
-    /* cut the EXTRA top gap (this is in addition to .app padding-top) */
-    padding: 12px 24px 64px 42px !important; /* <-- left moved ~10px */
-    min-height: calc(100vh - var(--topbar-h-stacked)) !important;
-  }
+  @media (max-width: 900px) {
+    .timeline-screen {
+      padding-top: 8px !important; /* less space above title */
+      padding-left: 42px !important; /* shifted left */
+    }
 
-  /* Sticky header: keep it below topbar + make sure timeline starts AFTER description */
-  .timeline-header {
-    top: var(--topbar-h-stacked) !important;
-    margin-bottom: 84px !important; /* <-- prevents description overlap */
-    padding-bottom: 6px !important;
-
-    /* Prevent the rail/years from visually showing "through" the header */
-    background: radial-gradient(circle at top, #1b2440, #050711 60%) !important;
+    .timeline-header {
+      top: var(--topbar-h-stacked) !important;
+      margin-bottom: 104px !important; /* more space under description */
+    }
   }
 
   /* Nav drawer content should start below the stacked topbar */
