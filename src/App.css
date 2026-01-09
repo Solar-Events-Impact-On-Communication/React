@@ -3690,3 +3690,25 @@ video {
     top: calc(var(--topbar-h-stacked) + 12px) !important;
   }
 }
+
+/* =========================================================
+   MOBILE (<= 900px): tighten left padding + add gap under intro
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /* Shift title/description/timeline left (reduce side padding) */
+  .timeline-screen {
+    padding-left: 10px !important; /* was 24px */
+    padding-right: 16px !important; /* keep a little right breathing room */
+  }
+
+  /* Add space between description text and the start of timeline */
+  .timeline-subtitle {
+    margin-bottom: 18px !important; /* increase gap below description */
+  }
+
+  /* If some browsers collapse margins weirdly, this guarantees the gap */
+  .timeline-years {
+    margin-top: 6px !important;
+  }
+}
