@@ -3627,72 +3627,157 @@ video {
 }
 
 /* =========================================================
-   TOPBAR — FINAL LAYOUT RULES (timeline vs other pages)
-   - Timeline (home): 2 rows when needed, with YEAR tools on the right
-   - Other pages: brand centered + menu centered (no right-side gap)
-   This block intentionally overrides earlier topbar hacks.
+   TOPBAR — FINAL LAYOUT (scoped + fixes)
+   - Default: single-row (menu left, brand centered, year tools right)
+   - Stacked (only when .topbar--stacked is present): brand row + tools row
    ========================================================= */
 
+/* Make the topbar itself consistent */
 .topbar {
-  padding: 10px 0 !important; /* removes the “mystery” right gap */
+  background: rgba(0, 0, 0, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  padding: 10px 18px !important;
   height: auto !important;
+  min-height: 0 !important;
 }
 
+/* DEFAULT (non-stacked): one row */
 .topbar-inner {
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  padding: 0 16px !important; /* safe edge padding */
-  box-sizing: border-box !important;
+  position: relative !important;
+  width: 100%;
   display: flex !important;
-  flex-direction: column !important; /* brand row + tools row */
+  flex-direction: row !important;
   align-items: center !important;
-  gap: 6px !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
 }
 
-/* BRAND always centered */
-.topbar-brand {
+/* Brand stays centered in the bar regardless of left/right content */
+.topbar-brand,
+.topbar-inner .brand.topbar-brand {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
   margin: 0 !important;
-  text-align: center !important;
+  white-space: nowrap;
 }
 
-/* Tools row: full width */
+/* Controls row spans full width so menu can hug left and year tools hug right */
 .topbar-tools-row {
   width: 100% !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: space-between !important;
   flex-wrap: nowrap !important;
-  gap: 12px !important;
-  box-sizing: border-box !important;
 }
 
-/* Home (timeline): menu left, year tools right */
-.topbar--timeline .topbar-tools-row {
+/* Menu: always left */
+.topbar-menu {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+.menu-button {
+  position: static !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+/* Year tools: always right (homepage only, since it doesn't render on other pages) */
+.year-search {
+  margin-left: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-right: 6px; /* slight breathing room from the window edge */
+}
+.year-search-input {
+  width: 84px; /* 4 digits + padding */
+  max-width: 84px;
+  border-radius: 999px; /* keep pill/ellipse */
+  text-align: left;
+}
+
+/* Popover: remove the "extra right padding" feel */
+.year-search-popover {
+  right: 0;
+  min-width: 0;
+  width: fit-content;
+  max-width: min(92vw, 360px);
+}
+
+/* STACKED MODE (homepage only; JS already prevents stacking elsewhere) */
+.topbar--stacked .topbar-inner {
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  padding-bottom: 2px;
+}
+
+.topbar--stacked .topbar-brand,
+.topbar--stacked .topbar-inner .brand.topbar-brand {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+.topbar--stacked .topbar-tools-row {
+  width: 100% !important;
   justify-content: space-between !important;
 }
 
-/* Non-home pages: menu centered (only thing in the tools row) */
-.topbar--simple .topbar-tools-row {
-  justify-content: center !important;
+/* =========================================================
+   TIMELINE — MOBILE WIDTH + EXPANDED ROW BACKGROUND
+   Fixes: right-side overflow + expanded "dark box" width
+   ========================================================= */
+
+.timeline-row {
+  box-sizing: border-box;
 }
 
-/* Stop any old “push right” hacks that create empty space */
-.topbar .year-search,
-.topbar .topbar-year-tools {
-  transform: none !important;
-  padding-right: 0 !important;
-  margin-right: 0 !important;
-}
+@media (max-width: 900px) {
+  /* Reduce the big gap above the timeline and align content left */
+  .main--timeline {
+    padding-top: 0 !important;
+  }
 
-/* YEAR tools should hug the right on timeline */
-.topbar--timeline .year-search {
-  margin-left: auto !important;
-  justify-content: flex-end !important;
-}
+  .timeline-screen {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
 
-/* Year picker popover: keep it tight to the right edge of the YEAR tools */
-.year-search-popover {
-  right: 0 !important;
-  max-width: min(320px, calc(100vw - 32px)) !important;
-  box-sizing: border-box !important;
+  .timeline-header {
+    margin-bottom: 22px !important;
+  }
+
+  .timeline-rail {
+    margin-left: 28px !important; /* keep the rail visible, but tighter */
+    padding-right: 0 !important; /* remove right gap */
+  }
+
+  .timeline-row {
+    padding: 18px 14px 18px 34px !important;
+    margin-bottom: 26px !important;
+    border-radius: 16px;
+  }
+
+  /* Background for hover / expanded state should NOT overflow */
+  .timeline-row:hover {
+    background: rgba(0, 0, 0, 0.28) !important;
+  }
+  .timeline-row--year.is-expanded {
+    background: rgba(0, 0, 0, 0.28) !important;
+  }
+
+  .timeline-year-events {
+    margin-top: 12px !important;
+    padding-left: 6px !important;
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+  }
 }
