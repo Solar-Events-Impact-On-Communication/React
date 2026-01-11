@@ -3702,3 +3702,31 @@ video {
     padding: 18px 14px 18px 34px;
   }
 }
+
+/* =========================================================
+   Patch: Mobile (<900px) year input + timeline event card sizing
+   (This block intentionally lives at the end of the file so it wins.)
+   ========================================================= */
+@media (max-width: 900px) {
+  /* YEAR input was getting too narrow ("YE"). Keep it compact but readable. */
+  .year-search-input {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+  }
+
+  /* Ensure expanded event cards never overflow the viewport width */
+  .timeline-year-events {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
+
+  .timeline-year-event {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
