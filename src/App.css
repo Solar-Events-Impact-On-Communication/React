@@ -3708,15 +3708,6 @@ video {
    (This block intentionally lives at the end of the file so it wins.)
    ========================================================= */
 @media (max-width: 900px) {
-  /* YEAR input was getting too narrow ("YE"). Keep it compact but readable. */
-  /* YEAR input: keep readable on small screens (avoid "YE") */
-  .year-search-input {
-    width: clamp(140px, 42vw, 200px) !important;
-    min-width: clamp(140px, 42vw, 200px) !important;
-    max-width: clamp(140px, 42vw, 200px) !important;
-    flex: 0 0 auto !important;
-  }
-
   /* Ensure expanded event cards never overflow the viewport width */
   .timeline-year-events {
     width: 100%;
@@ -3737,22 +3728,18 @@ video {
   /* Prevent YEAR input from collapsing while keeping it compact */
   .year-search {
     flex-wrap: nowrap !important;
+    align-items: center;
   }
 
   .year-search-input,
   .year-search input,
   .year-search input[type='text'],
   .year-search input[type='number'] {
-    width: 6ch !important; /* fits 4 digits comfortably */
-    min-width: 6ch !important;
-    max-width: 6ch !important;
+    width: 80px !important; /* fits 4 digits comfortably */
+    min-width: 80px !important;
+    max-width: 120 px !important;
 
-    flex: 0 0 auto !important; /* stops flex from shrinking it */
+    flex: 0 0 120px !important; /* stops flex from shrinking it */
     flex-shrink: 0 !important;
-
-    text-align: center !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    border-radius: 999px !important;
   }
 }
