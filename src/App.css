@@ -3540,32 +3540,25 @@ video {
 }
 
 /* =========================================================
-   TOPBAR — single-row by default, 2-row only when .topbar--stacked
-   Works for all pages; stacking only activates on home via App.jsx
+   TOPBAR + MOBILE TIMELINE — CLEAN CONSOLIDATED RULES
+   (This section replaces the old duplicate “TOPBAR — …” blocks)
    ========================================================= */
 
+/* ---- Topbar base ---- */
 .topbar {
   background: rgba(0, 0, 0, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 10px 18px;
+  padding: 12px 18px; /* give a touch of breathing room on the right edge */
 }
 
-/* Base (single-row behavior) */
+/* Single-row by default (>= 901px) */
 .topbar-inner {
-  position: relative; /* allows centered brand */
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
-  min-height: 54px; /* keeps vertical centering consistent */
-}
-
-/* Center the brand in the bar (single-row) */
-.topbar-brand {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
+  /* The tools row will control the left/right layout */
 }
 
 /* Tools row spans full width: menu hard-left, year tools hard-right */
@@ -3574,397 +3567,138 @@ video {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
+  flex-wrap: nowrap;
 }
 
-/* Keep the year/search/browse aligned right */
+/* Brand is always centered (independent of tools row width) */
+.topbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* Ensure menu button stays on the left and doesn't get pushed/overlapped */
+.topbar-menu {
+  flex: 0 0 auto;
+  z-index: 3;
+}
+
+/* Year tools on the right */
 .year-search {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-  flex-wrap: nowrap;
-  margin-left: auto;
-  padding-right: 6px; /* slight right padding so it’s not hugging the edge */
+  position: relative; /* anchor the popover */
+  z-index: 3;
 }
 
-/* Year input: 4-digit compact pill */
+/* Year input: compact 4-digit pill */
 .year-search-input {
-  width: 6ch;
-  min-width: 6ch;
-  max-width: 6ch;
+  width: 8.5ch;
+  max-width: 8.5ch;
+  min-width: 8.5ch;
   border-radius: 999px;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 14px;
+  box-sizing: border-box;
 }
 
-/* Buttons stay pill-like */
+/* Buttons: pill + no wrapping */
 .year-search-button,
 .year-search-browse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
   border-radius: 999px;
+  box-sizing: border-box;
   white-space: nowrap;
 }
 
-/* =========================
-   Stacked (2-row) only when .topbar--stacked
-   ========================= */
-
-.topbar--stacked .topbar-inner {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  min-height: unset;
+/* Popover: right-aligned to the YEAR controls by default */
+.year-search-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  left: auto;
+  margin: 0;
+  max-width: min(92vw, 720px);
 }
 
-/* In stacked mode, brand becomes normal flow (row 1) */
+/* ---- Stacked only when React adds .topbar--stacked (home under ~900px) ---- */
+.topbar--stacked .topbar-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 .topbar--stacked .topbar-brand {
   position: static;
   transform: none;
-  align-self: center;
 }
 
-/* Controls row (row 2): menu left, year tools right */
 .topbar--stacked .topbar-tools-row {
-  justify-content: space-between;
-}
-
-/* =========================================================
-   TOPBAR — FINAL LAYOUT (scoped + fixes)
-   - Default: single-row (menu left, brand centered, year tools right)
-   - Stacked (only when .topbar--stacked is present): brand row + tools row
-   ========================================================= */
-
-/* Make the topbar itself consistent */
-.topbar {
-  background: rgba(0, 0, 0, 0.9) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(10px);
-  padding: 10px 18px !important;
-  height: auto !important;
-  min-height: 0 !important;
-}
-
-/* DEFAULT (non-stacked): one row */
-.topbar-inner {
-  position: relative !important;
   width: 100%;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
 }
 
-/* Brand stays centered in the bar regardless of left/right content */
-.topbar-brand,
-.topbar-inner .brand.topbar-brand {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  margin: 0 !important;
-  white-space: nowrap;
-}
-
-/* Controls row spans full width so menu can hug left and year tools hug right */
-.topbar-tools-row {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important;
-}
-
-/* Menu: always left */
-.topbar-menu {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-}
-.menu-button {
-  position: static !important;
-  margin: 0 !important;
-  transform: none !important;
-}
-
-/* Year tools: always right (homepage only, since it doesn't render on other pages) */
-.year-search {
-  margin-left: auto !important;
-  display: flex;
-  align-items: center;
+.topbar--stacked .year-search {
   justify-content: flex-end;
-  gap: 10px;
-  padding-right: 6px; /* slight breathing room from the window edge */
-}
-.year-search-input {
-  width: 84px; /* 4 digits + padding */
-  max-width: 84px;
-  border-radius: 999px; /* keep pill/ellipse */
-  text-align: left;
 }
 
-/* Popover: remove the "extra right padding" feel */
-.year-search-popover {
-  right: 0;
-  min-width: 0;
-  width: fit-content;
-  max-width: min(92vw, 360px);
-}
-
-/* STACKED MODE (homepage only; JS already prevents stacking elsewhere) */
-.topbar--stacked .topbar-inner {
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 6px !important;
-  padding-bottom: 2px;
-}
-
-.topbar--stacked .topbar-brand,
-.topbar--stacked .topbar-inner .brand.topbar-brand {
-  position: static !important;
-  top: auto !important;
-  left: auto !important;
-  transform: none !important;
-}
-
-.topbar--stacked .topbar-tools-row {
-  width: 100% !important;
-  justify-content: space-between !important;
+/* Under 900px: make the popover span the full available width (no right gap) */
+@media (max-width: 900px) {
+  .topbar--stacked .year-search-popover {
+    left: 0;
+    right: 0;
+    width: calc(100vw - 36px); /* topbar padding (18px * 2) */
+    max-width: none;
+  }
 }
 
 /* =========================================================
-   TIMELINE — MOBILE WIDTH + EXPANDED ROW BACKGROUND
-   Fixes: right-side overflow + expanded "dark box" width
+   TIMELINE (HOME VIEW) — MOBILE SPACING (<900px)
+   Fix: reduce gap below topbar, and restore space between description and rail
    ========================================================= */
-
-.timeline-row {
-  box-sizing: border-box;
-}
 
 @media (max-width: 900px) {
-  /* Reduce the big gap above the timeline and align content left */
-  .main--timeline {
-    padding-top: 0 !important;
-  }
-
   .timeline-screen {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    /* Reduce the “giant” top gap and keep content away from edges */
+    padding: 18px 15px 64px 15px;
+    min-height: calc(100vh - 120px);
+    box-sizing: border-box;
   }
 
+  /* Make header non-sticky on small screens to avoid overlap issues */
   .timeline-header {
-    margin-bottom: 22px !important;
+    position: relative;
+    top: auto;
+    margin-bottom: 18px;
   }
 
+  .timeline-header h1 {
+    margin: 0 0 6px 0;
+  }
+
+  /* Restore a visible gap between the description and the rail */
+  .timeline-header p {
+    margin: 0 0 18px 0;
+  }
+
+  /* Rail + rows: align better with reduced left padding */
   .timeline-rail {
-    margin-left: 28px !important; /* keep the rail visible, but tighter */
-    padding-right: 0 !important; /* remove right gap */
+    margin-left: 18px;
+    padding-right: 0;
   }
 
   .timeline-row {
-    padding: 18px 14px 18px 34px !important;
-    margin-bottom: 26px !important;
-    border-radius: 16px;
-  }
-
-  /* Background for hover / expanded state should NOT overflow */
-  .timeline-row:hover {
-    background: rgba(0, 0, 0, 0.28) !important;
-  }
-  .timeline-row--year.is-expanded {
-    background: rgba(0, 0, 0, 0.28) !important;
-  }
-
-  .timeline-year-events {
-    margin-top: 12px !important;
-    padding-left: 6px !important;
-    padding-right: 0 !important;
-    margin-right: 0 !important;
-  }
-}
-
-/* =========================================================
-   TIMELINE — MOBILE GAP TUNING (<= 900px)
-   Put this at VERY BOTTOM of App.css
-   ========================================================= */
-@media (max-width: 900px) {
-  /* 1) Shrink the gap between the topbar and the Timeline title (was 50px) */
-  .timeline-screen {
-    padding-top: 4px !important; /* ~75% smaller than 50px */
-    padding-left: 15px !important; /* keep your requested left padding */
-    padding-right: 16px !important;
-  }
-
-  /* 2) Restore space between the short description and the actual timeline */
-  .timeline-header {
-    margin-bottom: 75px !important; /* brings back the missing gap */
-  }
-}
-
-/* =========================================================
-   YEAR / DECADE POPOVER — REMOVE ALL RIGHT GAP
-   ========================================================= */
-
-.year-search-popover {
-  position: absolute;
-  top: 120%;
-  right: 0;
-
-  /* 🔥 key fixes */
-  width: fit-content !important;
-  max-width: none !important;
-  min-width: 0 !important;
-
-  padding: 12px 12px 12px 12px; /* real padding only */
-  box-sizing: border-box;
-
-  background: rgba(4, 6, 18, 0.98);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  z-index: 30;
-}
-
-.year-search-decade-list,
-.year-search-year-list {
-  width: 100%;
-}
-
-/* =========================================================
-   MOBILE (<= 900px) — Timeline spacing + Browse popover width
-   ========================================================= */
-@media (max-width: 900px) {
-  /* 1) Reduce the giant gap between topbar and Timeline header */
-  .timeline-screen {
-    /* was effectively 50px+ on mobile; shrink it hard */
-    padding-top: 20px !important;
-    /* you said you want ~15px left */
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
-
-  /* 2) Stop "sticky top" math from creating weird header gaps on mobile */
-  .timeline-header {
-    position: static !important; /* kills sticky behavior on small screens */
-    top: auto !important;
-    margin-bottom: 14px !important; /* creates a small, consistent gap below description */
-  }
-
-  /* 3) Bring back space between description and the actual timeline rail */
-  .timeline-rail {
-    margin-top: 20px !important; /* this is the missing “breathing room” */
-    padding-right: 0 !important; /* prevents “fake right gap” inside rail */
-  }
-
-  /* Optional: if the rail is still too far right on mobile */
-  .timeline-rail {
-    margin-left: 32px !important; /* was 48px by default */
-  }
-
-  /* 4) Remove the "right-side padding/gap" in the Browse popover */
-  .year-search-popover {
-    right: 0 !important; /* undo right: 8px on small screens */
-    left: auto !important;
-
-    width: max-content !important; /* shrink-wrap to content */
-    min-width: 0 !important; /* overrides min-width: 260px */
-    max-width: calc(100vw - 10px) !important; /* prevents overflow on tiny screens */
-
-    box-sizing: border-box !important;
-  }
-}
-
-/* =========================================================
-   MOBILE FIXES (<= 900px) — Timeline spacing + Browse popover width
-   ========================================================= */
-@media (max-width: 900px) {
-  /* A) Cut the gap between the topbar and the "Timeline" title (keep it ~5–10px) */
-  .timeline-screen {
-    padding-top: 35px !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
-
-  /* B) Prevent overlap/weird spacing by killing sticky math on mobile */
-  .timeline-header {
-    position: static !important;
-    top: auto !important;
-    margin-bottom: 24px !important; /* restores space below the description */
-  }
-
-  /* C) Add a little extra space under the short description */
-  .timeline-header p {
-    margin-bottom: 18px !important;
-  }
-
-  /* D) Slight additional separation so the rail never kisses the description */
-  .timeline-rail {
-    margin-top: 8px !important;
-  }
-
-  /* E) Browse popover: remove the “right gap” by making it full-width on mobile */
-  .year-search-popover {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-
-    width: 100% !important;
-    max-width: none !important;
-    min-width: 0 !important;
-
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-}
-
-/* =========================================================
-   TOPBAR — Wide screens must be single-row
-   (Prevents any older rules / lingering .topbar--stacked from keeping it stacked)
-   ========================================================= */
-@media (min-width: 901px) {
-  /* Single-row layout no matter what */
-  .topbar-inner {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-  }
-
-  /* Keep brand centered (absolute) in wide mode */
-  .topbar-brand {
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
-  }
-
-  /* If class is still present, neutralize stacked behavior */
-  .topbar--stacked .topbar-inner {
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 12px !important;
-    min-height: 54px !important;
-  }
-
-  .topbar--stacked .topbar-brand {
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    align-self: auto !important;
-  }
-
-  .topbar--stacked .topbar-tools-row {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex-wrap: nowrap !important;
+    padding: 18px 14px 18px 34px;
   }
 }
