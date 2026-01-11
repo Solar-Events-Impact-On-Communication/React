@@ -3920,3 +3920,51 @@ video {
     box-sizing: border-box !important;
   }
 }
+
+/* =========================================================
+   TOPBAR — Wide screens must be single-row
+   (Prevents any older rules / lingering .topbar--stacked from keeping it stacked)
+   ========================================================= */
+@media (min-width: 901px) {
+  /* Single-row layout no matter what */
+  .topbar-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+
+  /* Keep brand centered (absolute) in wide mode */
+  .topbar-brand {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+  }
+
+  /* If class is still present, neutralize stacked behavior */
+  .topbar--stacked .topbar-inner {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-height: 54px !important;
+  }
+
+  .topbar--stacked .topbar-brand {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    align-self: auto !important;
+  }
+
+  .topbar--stacked .topbar-tools-row {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+}
