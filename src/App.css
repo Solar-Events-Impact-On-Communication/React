@@ -3884,7 +3884,7 @@ video {
 @media (max-width: 900px) {
   /* A) Cut the gap between the topbar and the "Timeline" title (keep it ~5–10px) */
   .timeline-screen {
-    padding-top: 20px !important;
+    padding-top: 35px !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
